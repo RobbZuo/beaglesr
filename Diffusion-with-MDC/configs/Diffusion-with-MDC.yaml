@@ -152,7 +152,7 @@ data:
 train:
   lr: 5e-5
   # batch: [64, 8]   # batchsize for training and validation
-  batch: [8, 4]   # batchsize for training and validation
+  batch: [8, 8]   # batchsize for training and validation
   use_fp16: False
   microbatch: 16
   seed: 123456
