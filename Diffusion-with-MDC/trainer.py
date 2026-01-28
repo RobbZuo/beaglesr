@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
-# Power by Zongsheng Yue 2022-05-18 13:04:06
 
 import os, sys, math, time, random, datetime, functools
 import lpips
