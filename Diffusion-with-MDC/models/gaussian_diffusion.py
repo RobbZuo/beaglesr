@@ -128,8 +128,9 @@ class GaussianDiffusion:
         scale_factor=None,
         normalize_input=True,
         latent_flag=True,
-        low_high_frequency_weight=1.0,
-        qr_structure_detail_weight=1.0,
+        mse_weight = 0.5,
+        low_high_frequency_weight= 0.25,
+        qr_structure_detail_weight= 0.25,
     ):
         self.kappa = kappa
         self.model_mean_type = model_mean_type
@@ -138,6 +139,7 @@ class GaussianDiffusion:
         self.normalize_input = normalize_input
         self.latent_flag = latent_flag
         self.sf = sf
+        self.mse_weight = mse_weight
         self.low_high_frequency_weight = low_high_frequency_weight
         self.qr_structure_detail_weight = qr_structure_detail_weight
 
@@ -577,7 +579,7 @@ class GaussianDiffusion:
 
             # Total loss
             terms["loss"] = (
-                terms["mse"] * weights
+                self.mse_weight * terms["mse"] * weights
                 + self.low_high_frequency_weight * terms["low_high_freq"]
                 + self.qr_structure_detail_weight * terms["qr_structure_detail"]
             )
