@@ -19,8 +19,9 @@ def create_gaussian_diffusion(
     timestep_respacing=None,
     scale_factor=None,
     latent_flag=True,
-    low_high_frequency_weight=1.0,
-    qr_structure_detail_weight=1.0,
+    mse_weight = 0.5,
+    low_high_frequency_weight= 0.25,
+    qr_structure_detail_weight= 0.25,
 ):
     sqrt_etas = gd.get_named_eta_schedule(
             schedule_name,
@@ -54,6 +55,7 @@ def create_gaussian_diffusion(
         normalize_input=normalize_input,
         sf=sf,
         latent_flag=latent_flag,
+        mse_weight = mse_weight,
         low_high_frequency_weight=low_high_frequency_weight,
         qr_structure_detail_weight=qr_structure_detail_weight,
     )
