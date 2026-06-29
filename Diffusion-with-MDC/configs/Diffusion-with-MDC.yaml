@@ -42,8 +42,9 @@ diffusion:
     scale_factor: 1.0
     normalize_input: True
     latent_flag: True
-    low_high_frequency_weight: 1.0
-    qr_structure_detail_weight: 1.0
+    mse_weight : 0.5
+    low_high_frequency_weight: 0.25
+    qr_structure_detail_weight: 0.25
 autoencoder:
   target: ldm.models.autoencoder.VQModelTorch
   ckpt_path: weights/autoencoder/autoencoder_vq_f4.pth
