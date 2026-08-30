@@ -29,6 +29,7 @@ from torch.nn.parallel import DistributedDataParallel as DDP
 from utils import util_net
 from utils import util_common
 from utils import util_image
+from utils.kspace_degradation import kspace_truncate_2d
 
 from basicsr.utils import DiffJPEG, USMSharp
 from basicsr.utils.img_process_util import filter2D
@@ -438,6 +439,21 @@ class TrainerDifIR(TrainerBase):
 
     @torch.no_grad()
     def prepare_data(self, data, dtype=torch.float32, realesrgan=None, phase='train'):
+        data_type = self.configs.data.get(phase, dict).type
+        if data_type == 'kspace' and phase == 'train':
+            im_gt = data['gt'].cuda().float().clamp(0, 1)  
+            sf = int(self.configs.degradation.sf)
+            im_lq = kspace_truncate_2d(im_gt, sf=sf)
+            im_lq = (im_lq - 0.5) / 0.5
+            im_gt = (im_gt - 0.5) / 0.5
+            self.lq, self.gt, flag_nan = replace_nan_in_batch(im_lq, im_gt)
+            if flag_nan:
+                with open(f"records_nan_rank{self.rank}.log", 'a') as f:
+                    f.write(f'Find Nan value in rank{self.rank}\n')
+            self._dequeue_and_enqueue()
+            self.lq = self.lq.contiguous()
+            return {'lq': self.lq, 'gt': self.gt}
+            
         if realesrgan is None:
             realesrgan = self.configs.data.get(phase, dict).type == 'realesrgan'
         if realesrgan and phase == 'train':
