@@ -24,7 +24,7 @@ def get_parser(**parser_kwargs):
     parser.add_argument(
             "--cfg_path",
             type=str,
-            default="./configs/realsr_swinunet_realesrgan256.yaml",
+            default="./configs/Diffusion-with-MDC.yaml",
             help="Configs of yaml file",
             )
     parser.add_argument(
